@@ -1,6 +1,6 @@
-export async function getCurVideo(path) {
+export async function getCurPhoto(path) {
     let res = await fetch(
-        `/api/video/${path}`,
+        `/api/image/${path}`,
         {method: 'GET'}
     )
     return await res.json()

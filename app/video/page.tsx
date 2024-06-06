@@ -6,6 +6,8 @@ import {useEffect, useState} from "react";
 import {hoverShadowSetYClassname} from "@/constants/tailwindClass";
 import {getCurVideo} from "@/api/video";
 import {useRouter} from "next/navigation";
+import {usePage} from "@/hooks/usePage";
+import {PageBottom} from "@/components/PageBottom";
 
 export default function VideoPage() {
     const nav = useRouter()
@@ -22,13 +24,18 @@ export default function VideoPage() {
     // 当前目录(2/3级)下的视频
     const [curVideo, setCurVideo] = useState([])
     // 防止视频过多卡死 设置分页
-    const [start, setStart] = useState(0)
-    const [end, setEnd] = useState(10)
+    // const [start, setStart] = useState(0)
+    // const [end, setEnd] = useState(10)
+    const {
+        start, end, reset, onPageSub, onPageAdd, getPage
+    } = usePage(10, curVideo.length)
+
 
     useEffect(() => {
         // 每次index和idx改变应该清空start end
-        setStart(0);
-        setEnd(10);
+        // setStart(0);
+        // setEnd(10);
+        reset();
 
         (async () => {
             // let res = await getChildDir('./public/videos')
@@ -39,17 +46,17 @@ export default function VideoPage() {
             setChild(childRes.dir) // 当前三级目录下所有文件和文件夹(不包含三级目录以下)
             if (deepIdx === -1) {
                 // 没有往更深
-                setCurVideo(childRes.dir.filter((c: string) => c.includes('.mp4')))
+                setCurVideo(childRes.dir.filter((c: string) => (c.includes('.mp4') || c.includes('mkv'))))
             } else {
                 console.log('获取deep child')
                 // 获取某个具体目录下的所有mp4 /2/3/.../.mp4
                 console.log(res.dir[idx] + '/' +
                     childRes.dir
-                        .filter((r: string) => !r.includes('.mp4'))[deepIdx])
+                        .filter((r: string) => !r.includes('.mp4') && !r.includes('.mkv'))[deepIdx])
                 let cur = await getCurVideo(
                     res.dir[idx] + '/' + childRes.dir
                         // 过滤mp4文件, 我们要的是子目录的文件
-                        .filter((r: string) => !r.includes('.mp4'))[deepIdx]
+                        .filter((r: string) => !r.includes('.mp4') && !r.includes('.mkv'))[deepIdx]
                 )
                 let curV = cur.videos.map((v: string) => {
                     let v1 = decodeURI(v)
@@ -129,18 +136,19 @@ export default function VideoPage() {
             }
         </div>
         {/*分页切换按钮*/}
-        <div className={'flex mb-4 flex-row justify-center w-full gap-3 text-lg'}>
-            <span onClick={(e) => {
-                if ((start - 10) < 0) return
-                setStart(start - 10)
-                setEnd(end - 10)
-            }}>&lt;</span>
-            <span>{start / 10}</span>
-            <span onClick={(e) => {
-                if ((start + 10) > curVideo.length) return
-                setStart(start + 10)
-                setEnd(end + 10)
-            }}>&gt;</span>
-        </div>
+        {/*<div className={'flex mb-4 flex-row justify-center w-full gap-3 text-lg'}>*/}
+        {/*    <span onClick={(e) => {*/}
+        {/*        if ((start - 10) < 0) return*/}
+        {/*        setStart(start - 10)*/}
+        {/*        setEnd(end - 10)*/}
+        {/*    }}>&lt;</span>*/}
+        {/*    <span>{start / 10}</span>*/}
+        {/*    <span onClick={(e) => {*/}
+        {/*        if ((start + 10) > curVideo.length) return*/}
+        {/*        setStart(start + 10)*/}
+        {/*        setEnd(end + 10)*/}
+        {/*    }}>&gt;</span>*/}
+        {/*</div>*/}
+        <PageBottom onPageSub={onPageSub} onPageAdd={onPageAdd} getPage={getPage}/>
     </div>)
 }
