@@ -1,13 +1,14 @@
 'use client';
 // import {readdirChildLevel, readdirFilter} from "@/lib/file";
 
-import {getChildDir} from "@/api/file";
-import {useEffect, useState} from "react";
-import {hoverShadowSetYClassname} from "@/constants/tailwindClass";
-import {getCurVideo} from "@/api/video";
-import {useRouter} from "next/navigation";
-import {usePage} from "@/hooks/usePage";
-import {PageBottom} from "@/components/PageBottom";
+import { getChildDir } from "@/api/file";
+import { useEffect, useState } from "react";
+import { hoverShadowSetYClassname } from "@/constants/tailwindClass";
+import { getCurVideo } from "@/api/video";
+import { useRouter } from "next/navigation";
+import { usePage } from "@/hooks/usePage";
+import { PageBottom } from "@/components/PageBottom";
+import { setList } from '@/store/vlist'
 
 export default function VideoPage() {
     const nav = useRouter()
@@ -116,11 +117,14 @@ export default function VideoPage() {
             {/*}*/}
             {curVideo
                 .slice(start, end)
-                .map((c: string) => (
+                .map((c: string, index) => (
                     <div
                         onClick={(e) => {
+                            setList(curVideo)
                             // 跳转播放
-                            nav.push(`/video/play?v=${c}`)
+                            // nav.push(`/video/play?v=${c}&i=${index}`)
+                            // todo: 这里的分页会让indx到不了末尾, 触发不了跳转会video
+                            nav.push(`/video/play?i=${index}&page=${getPage()}&size=${10}`)
                         }}
                         className={`${hoverShadowSetYClassname} flex flex-col shadow-md rounded-lg`}>
                         <video
@@ -149,6 +153,6 @@ export default function VideoPage() {
         {/*        setEnd(end + 10)*/}
         {/*    }}>&gt;</span>*/}
         {/*</div>*/}
-        <PageBottom onPageSub={onPageSub} onPageAdd={onPageAdd} getPage={getPage}/>
+        <PageBottom onPageSub={onPageSub} onPageAdd={onPageAdd} getPage={getPage} />
     </div>)
 }

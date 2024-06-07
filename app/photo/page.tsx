@@ -56,7 +56,7 @@ export default function PhotoPage() {
                                     setIdx(index)
                                 }}
                                 className={'shadow-lg object-contain rounded max-h-screen w-3/4'}
-                                src={img} alt=""/>
+                                src={(img)} alt=""/>
                         ))}
                 </div>
                 <PageBottom onPageAdd={onPageAdd} onPageSub={onPageSub} getPage={getPage}/>
