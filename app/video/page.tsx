@@ -92,7 +92,7 @@ export default function VideoPage() {
                 {dir
                     .map((d, index) => (
                         <span
-                            className={`${idx === index ? 'bg-green-200' : ''} ${hoverShadowSetYClassname} border hover:bg-green-300 rounded p-2 h-10`}
+                            className={`truncate ${idx === index ? 'bg-green-200' : ''} ${hoverShadowSetYClassname} border hover:bg-green-300 rounded p-2 h-10`}
                             onClick={(e) => setIdx(index)}
                             key={index}>{d}</span>
                     ))}

@@ -20,7 +20,7 @@
 }
 
 ::-webkit-scrollbar{
-    width: 1px;
+    width: 5px;
     /*background-color: antiquewhite;*/
 }
 

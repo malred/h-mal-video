@@ -4,11 +4,11 @@ interface PageProps {
     onPageSub: MouseEventHandler<HTMLSpanElement>,
     onPageAdd: MouseEventHandler<HTMLSpanElement>,
     getPage: Function
+    // setPage: Function
 }
 
 // 底部分页组件 < 0 >
 export const PageBottom = (props: PageProps) => {
-
     return (
         <div className={'flex mb-4 flex-row justify-center w-full gap-3 text-lg'}>
             <span className={'rounded hover:bg-green-300 p-1'}

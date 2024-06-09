@@ -1,14 +1,18 @@
 'use client';
-
-import {Suspense, useEffect, useRef, useState} from "react";
-import {usePage} from "@/hooks/usePage";
+import {useSearchParams} from "next/navigation";
+import {Suspense, useEffect, useState} from "react";
 import {PageBottom} from "@/components/PageBottom";
+import {usePage} from "@/hooks/usePage";
 
-export default function PhotoPage() {
+export default function MangaPage() {
+    // 目录名
+    let name = useSearchParams().get('name')
+
     const [imgs, setImgs] = useState([])
+    let pageSize = 50
     const {
         start, end, reset, onPageSub, onPageAdd, getPage, setPage
-    } = usePage(10, imgs.length)
+    } = usePage(pageSize, imgs.length)
     // 当前要点击放大的图
     const [idx, setIdx] = useState(0)
     // 是否放大图 (铺满页面)
@@ -20,7 +24,8 @@ export default function PhotoPage() {
     useEffect(() => {
         reset();
         (async () => {
-            let res = await fetch(`api/image`, {method: 'GET'})
+            let res = await fetch(`api/image/${name}`, {method: 'GET'})
+            console.log(res)
             let photos = await res.json()
             console.log(photos.images.slice(start, end));
             let ps = photos.images.map((p: string) => p.replace('public/', ''))
@@ -30,7 +35,7 @@ export default function PhotoPage() {
     // 变动时滚动
     useEffect(() => {
         console.log(curH)
-        if (curH > (window.outerHeight * 10)) {
+        if (curH > (window.outerHeight * pageSize)) {
             console.log('stop')
             setTimeout(() => {
                 setCurH(0)

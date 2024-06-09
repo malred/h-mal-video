@@ -31,7 +31,20 @@ export const usePage = (pageSize, length) => {
         return start / pageSize
     }
 
+    const setPage = (num) => {
+        // 超过了最大页数
+        if (length / pageSize < num) {
+            // length/size -> 有小数点,被取整,所以 * page的结果是整数
+            setStart(length / pageSize * pageSize)
+            setEnd(length - 1)
+            return length / pageSize
+        }
+        setStart(num * pageSize)
+        setEnd(start + pageSize)
+        return start / pageSize
+    }
+
     return {
-        start, end, reset, onPageSub, onPageAdd, getPage
+        start, end, reset, onPageSub, onPageAdd, getPage, setPage
     }
 }
