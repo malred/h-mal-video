@@ -39,21 +39,31 @@ export default function VideoPage() {
         reset();
 
         (async () => {
+            // 获取三级目录
             // let res = await getChildDir('./public/videos')
             let res = await getChildDir('public/videos')
             setDir(res.dir)
             console.log(res.dir)
+            // 获取三级目录
             let childRes = await getChildDir('public/videos/' + res.dir[idx])
             setChild(childRes.dir) // 当前三级目录下所有文件和文件夹(不包含三级目录以下)
             if (deepIdx === -1) {
+                console.log('no deep');
+
                 // 没有往更深
-                setCurVideo(childRes.dir.filter((c: string) => (c.includes('.mp4') || c.includes('mkv'))))
+                setCurVideo(
+                    childRes.dir
+                        .filter((c: string) => (c.includes('.mp4') || c.includes('mkv')))
+                        .map((c: string) => 'videos/' + res.dir[idx] + '/' + c)
+                )
             } else {
                 console.log('获取deep child')
                 // 获取某个具体目录下的所有mp4 /2/3/.../.mp4
-                console.log(res.dir[idx] + '/' +
+                console.log('set cur video',
+                    res.dir[idx] + '/' +
                     childRes.dir
-                        .filter((r: string) => !r.includes('.mp4') && !r.includes('.mkv'))[deepIdx])
+                        .filter((r: string) => !r.includes('.mp4') && !r.includes('.mkv'))[deepIdx]
+                )
                 let cur = await getCurVideo(
                     res.dir[idx] + '/' + childRes.dir
                         // 过滤mp4文件, 我们要的是子目录的文件
@@ -120,6 +130,8 @@ export default function VideoPage() {
                 .map((c: string, index) => (
                     <div
                         onClick={(e) => {
+                            console.log('curVideo', curVideo);
+
                             setList(curVideo)
                             // 跳转播放
                             // nav.push(`/video/play?v=${c}&i=${index}`)

@@ -70,7 +70,9 @@ export default function VideoPlayPage() {
                         muted
                         ref={videoRef}
                         onPlay={(e) => {
+                            //@ts-ignore
                             videoRef.current.muted=false
+                            //@ts-ignore
                             videoRef.current.requestFullscreen();
                         }}
                         onEnded={(e) => {
