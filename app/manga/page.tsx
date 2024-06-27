@@ -53,10 +53,10 @@ export default function MangaPage() {
         //     }
         // } else {
         //     console.log('scroll')
-        // 0.5s后更改h, 触发effect, effect先执行滚动, 然后又设置延时set, 循环触发
+        // 1s后更改h, 触发effect, effect先执行滚动, 然后又设置延时set, 循环触发
         let id = setTimeout(() => {
             setCurH(curH + 400)
-        }, 500);
+        }, 800);
         // 下一次进入时触发滚动
         return () => {
             clearTimeout(id)
