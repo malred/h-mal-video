@@ -6,6 +6,7 @@ import {videoStaticBasePath} from '@/constants/urlOrPath'
 import {getList} from "@/store/vlist";
 import {Badge} from "@/components/ui/badge";
 import Link from "next/link";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 // 强制更新
 // export const dynamic = 'force-dynamic'
@@ -157,22 +158,24 @@ export default function VideoPlayPage() {
                     </div>
                 </div>
                 {/*播放列表*/}
-                <div className={'border-l-2 p-4 mt-10 w-88 flex flex-col gap-3'}>
-                    {/*<span className={'text-xl font-bold'}>播放列表</span>*/}
-                    {getList()
-                        .slice(parseInt(page) * parseInt(size),
-                            parseInt(size) + parseInt(page) * parseInt(size))
-                        .map((l, i) => (
-                            <Link href={`/video/play?i=${i}&page=${page}&size=${size}`}>
-                                <div className={'bg-pink-50 shadow-lg rounded-lg flex flex-row gap-2'} key={i}>
-                                    <video
-                                        className={'max-w-44 bg-green-50 h-48 rounded-lg '}
-                                        src={'/' + l}></video>
-                                    <span className={'truncate w-36 p-2'}>{l}</span>
-                                </div>
-                            </Link>
-                        ))}
-                </div>
+                <ScrollArea className="w-88 h-screen">
+                    <div className={'border-l-2 p-4 mt-10 w-88 flex flex-col gap-3'}>
+                        {/*<span className={'text-xl font-bold'}>播放列表</span>*/}
+                        {getList()
+                            .slice(parseInt(page) * parseInt(size),
+                                parseInt(size) + parseInt(page) * parseInt(size))
+                            .map((l, i) => (
+                                <Link href={`/video/play?i=${i}&page=${page}&size=${size}`}>
+                                    <div className={'mx-2 bg-pink-50 shadow-lg rounded-lg flex flex-row gap-2'} key={i}>
+                                        <video
+                                            className={'max-w-44 bg-green-50 h-48 rounded-lg '}
+                                            src={'/' + l}></video>
+                                        <span className={'truncate w-36 p-2'}>{l}</span>
+                                    </div>
+                                </Link>
+                            ))}
+                    </div>
+                </ScrollArea>
             </div>
         </Suspense>
     )
