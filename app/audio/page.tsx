@@ -21,7 +21,7 @@ export default function AudioPage() {
     console.log(audio)
 
     return (<>
-        <div className={'min-h-screen flex flex-col gap-4 pt-20 '}>
+        <div className={'min-h-screen flex flex-col gap-4 pt-24 pb-5'}>
             {audio.map((a: string) => (
                 <div className={'flex flex-row items-center justify-between bg-pink-200 shadow-lg rounded-lg p-2'}>
                     <span className={''}>

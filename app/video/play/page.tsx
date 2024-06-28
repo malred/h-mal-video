@@ -92,7 +92,17 @@ export default function VideoPlayPage() {
                             console.log(size)
                             if (i + (page * size) + 1 < getList().length) {
                                 // nav.push(`/video/play?v=${getList()[i + 1]}&i=${i + 1}`)
-                                nav.push(`/video/play?i=${i + 1}&page=${page}&size=${size}`)
+                                let p = parseInt(page)
+                                let idx = parseInt(i)
+                                if (idx + 1 === size) {
+                                    idx = 0
+                                    p += 1
+                                    console.log(idx, p)
+                                } else {
+                                    idx += 1
+                                    console.log(idx, p)
+                                }
+                                nav.push(`/video/play?i=${idx}&page=${p}&size=${size}`)
                             } else nav.push('/video')
                         }}
                         className={`rounded-lg h-[30rem] w-[50rem]`}
@@ -150,17 +160,17 @@ export default function VideoPlayPage() {
                 <div className={'border-l-2 p-4 mt-10 w-88 flex flex-col gap-3'}>
                     {/*<span className={'text-xl font-bold'}>播放列表</span>*/}
                     {getList()
-                        .slice(0, parseInt(size))
+                        .slice(parseInt(page) * parseInt(size),
+                            parseInt(size) + parseInt(page) * parseInt(size))
                         .map((l, i) => (
-                            <div className={'bg-pink-50 shadow-lg rounded-lg flex flex-row gap-2'} key={i}>
-                                <video
-                                    className={'max-w-44 bg-green-50 h-48 rounded-lg '}
-                                    src={'/' + l}></video>
-                                <Link href={`/video/play?i=${i}&page=${page}&size=${size}`}
-                                      className={'truncate w-36 p-2'}>
-                                    {l}
-                                </Link>
-                            </div>
+                            <Link href={`/video/play?i=${i}&page=${page}&size=${size}`}>
+                                <div className={'bg-pink-50 shadow-lg rounded-lg flex flex-row gap-2'} key={i}>
+                                    <video
+                                        className={'max-w-44 bg-green-50 h-48 rounded-lg '}
+                                        src={'/' + l}></video>
+                                    <span className={'truncate w-36 p-2'}>{l}</span>
+                                </div>
+                            </Link>
                         ))}
                 </div>
             </div>
