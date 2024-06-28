@@ -7,6 +7,7 @@ import {getList} from "@/store/vlist";
 import {Badge} from "@/components/ui/badge";
 import Link from "next/link";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {Input} from "@/components/ui/input";
 
 // 强制更新
 // export const dynamic = 'force-dynamic'
@@ -120,12 +121,20 @@ export default function VideoPlayPage() {
                             <Badge key={i} variant={'pink'}>{s}</Badge>
                         ))}
                     </div>
-                    <div className={'w-1/3 border-t-2 '}>
+                    <div className={'w-1/3 border-t-2 my-2'}>
                     </div>
-                    <div className={'w-2/3 my-1'}>
-                        留言
+                    <div className={'items-center w-2/3 grid grid-cols-3 justify-center my-1'}>
+                        <span className={'text-lg font-bold'}>
+                            留言
+                        </span>
+                        <Input className={'h-8'}/>
+                        <div className={'flex justify-center'}>
+                        <span className={'cursor-pointer p-2 bg-pink-200 rounded-lg w-12 text-center'}>
+                            发送
+                        </span>
+                        </div>
                     </div>
-                    <div className={'w-2/3 '}>
+                    <div className={'w-2/3 mb-5'}>
                         {[
                             {
                                 id: 1,
@@ -138,7 +147,7 @@ export default function VideoPlayPage() {
                                 id: 1,
                                 name: 'user1',
                                 avatar: '/logo.png',
-                                comment: '爆舔丝足😝😝😝🥵🥵🥵',
+                                comment: '好想舔丝足😝😝😝🥵🥵🥵',
                                 createdAt: '2024-6-27'
                             }
                         ].map((item, i) => (
