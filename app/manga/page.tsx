@@ -128,7 +128,7 @@ export default function MangaPage() {
                 {!expend && <div
                     // @ts-ignore
                     //ref={ptopRef}
-                    className={'flex flex-col gap-2 md:pt-12 pt-12 bg-gray-100 min-h-screen'}>
+                    className={'flex flex-col gap-2 2xl:mt-14 mt-16 bg-gray-100 min-h-screen'}>
                     {/* 纯色背景 加 搜索词或页面标题 */}
                     {/*<div className={'text-center md:p-20 p-14 bg-amber-200'}>*/}
                     {/*    <span className={' text-2xl '}>图片</span>*/}

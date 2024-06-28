@@ -48,7 +48,7 @@ export default function SortPage() {
     // 浏览图片, 拖拽排序
     // 重命名接口 -> oldName, newName -> 本页面拖拽时在前面添加1,2,3...序号,然后提交
     return (
-        <div className={'pt-14 flex flex-row flex-wrap gap-3'}>
+        <div className={'2xl:pt-14 pt-20 flex flex-row flex-wrap gap-3'}>
             <div className={'w-full'}></div>
             {newImgs.map((item: { id: number, img: string }, index: number) => (
                     <Draggable

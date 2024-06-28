@@ -5,6 +5,12 @@ import {usePage} from "@/hooks/usePage";
 import {PageBottom} from "@/components/PageBottom";
 import Link from "next/link";
 import {hoverShadowSetYClassname} from "@/constants/tailwindClass";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import {Badge} from "@/components/ui/badge";
 
 export default function PhotoPage() {
     // let res = await fetch('http://localhost:3000/api/audio')
@@ -78,27 +84,42 @@ export default function PhotoPage() {
     return (
         <>
             <div className="flex flex-col items-center justify-between ">
-                <div className={'2xl:mt-12 mt-16 p-2 min-h-screen min-w-full flex flex-col'}>
+                <div className={'2xl:mt-14 mt-20 p-2 min-h-screen min-w-full flex flex-col'}>
                     {/*card*/}
                     <div className={'py-4 px-1 flex flex-wrap flex-row gap-x-8 gap-y-16'}>
                         {names
                             .map((n: string, index: number) => (
                                 // @ts-ignore
-                                <Link href={`/manga?name=${imgs.filter((p: string) => p.includes(n))[0].replace('/', '')}`}>
+                                <Link
+                                    href={`/manga?name=${imgs.filter((p: string) => p.includes(n))[0].replace('/', '')}`}>
                                     <div
                                         className={hoverShadowSetYClassname +
                                             'relative h-40 border w-28 rounded-lg flex flex-row justify-center'}
                                     >
-                                        <img
-                                            // width={28}
-                                            // height={40}
-                                            // loading={"lazy"}
-                                            // fetchPriority={'high'}
-                                            title={n}
-                                            className={'rounded-lg opacity-80 h-40 w-28 '}
-                                            src={'/' + covers[index]}
-                                            alt=""/>
-                                        <span className={'absolute w-28 truncate font-black'}>{n}</span>
+                                        <HoverCard>
+                                            <HoverCardTrigger>
+                                                <img
+                                                    // width={28}
+                                                    // height={40}
+                                                    // loading={"lazy"}
+                                                    // fetchPriority={'high'}
+                                                    // title={n}
+                                                    className={'rounded-lg opacity-80 h-40 w-28 '}
+                                                    src={'/' + covers[index]}
+                                                    alt=""/>
+                                                <span className={'absolute w-28 truncate font-black'}>{n}</span>
+                                            </HoverCardTrigger>
+                                            <HoverCardContent>
+                                                <div className={'py-2 flex flex-row gap-3'}>
+                                                    <img
+                                                        className={'rounded-lg opacity-80 h-20 w-14 '}
+                                                        src={'/' + covers[index]}
+                                                        alt=""/>
+                                                    <span>{n}</span>
+                                                </div>
+                                                <Badge variant={'pink'}>丝袜</Badge>
+                                            </HoverCardContent>
+                                        </HoverCard>
                                     </div>
                                 </Link>))}
                     </div>
