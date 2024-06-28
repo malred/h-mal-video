@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
 
     let imgs = await req.json()
     for (let i = 0; i < imgs.length; i++) {
+        imgs[i].img = imgs[i].img.replaceAll('_', '')
         console.log(imgs[i].img);
         console.log(imgs[i].img.slice(
             imgs[i].img.lastIndexOf('/'),

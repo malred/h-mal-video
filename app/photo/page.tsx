@@ -27,7 +27,8 @@ export default function PhotoPage() {
     useEffect(() => {
         // reset();
         (async () => {
-            let res = await fetch(`api/image`, {method: 'GET', cache: 'force-cache'})
+            // let res = await fetch(`api/image`, {method: 'GET', cache: 'force-cache'})
+            let res = await fetch(`api/image`, {method: 'GET'})
             let photos = await res.json()
             // console.log(photos.images.slice(start, end));
             // console.log(photos.images)
@@ -104,7 +105,7 @@ export default function PhotoPage() {
                                                     loading={"lazy"}
                                                     fetchPriority={'high'}
                                                     // title={n}
-                                                    className={'rounded-lg opacity-80 h-40 w-28 '}
+                                                    className={'object-cover rounded-lg opacity-80 h-40 w-28 '}
                                                     src={'/' + covers[index]}
                                                     alt=""/>
                                                 <span className={'absolute w-28 truncate font-black'}>{n}</span>

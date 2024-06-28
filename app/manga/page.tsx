@@ -32,14 +32,21 @@ export default function MangaPage() {
     useEffect(() => {
         // reset();
         (async () => {
-            let res = await fetch(`api/image/${name}`, {method: 'GET', cache: 'force-cache'})
+            // 使用cache则排序后最新结果不会显示
+            // let res = await fetch(`api/image/${name}`, {method: 'GET', cache: 'force-cache'})
+            let res = await fetch(`api/image/${name}`, {method: 'GET'})
             console.log(res)
             let photos = await res.json()
             // console.log(photos.images.slice(start, end));
             let ps = photos.images.map((p: string) => p.replace('public/', ''))
             ps.sort((a: string, b: string) => {
+                console.log(
+                    a.split('_'),
+                    b.split('_')
+                )
                 let a1 = a.split('_')[0].split('/')
                 let b1 = b.split('_')[0].split('/')
+
                 console.log(a1, b1)
                 console.log(a1.length, b1.length)
                 // 默认比较字符串, 这里用 减号 进行数值比较
@@ -48,6 +55,7 @@ export default function MangaPage() {
                     (a1[a1.length - 1]) - (b1[b1.length - 1])
                 )
             })
+            console.log('ps', ps)
             setImgs(ps)
         })()
     }, [])
@@ -103,28 +111,6 @@ export default function MangaPage() {
                     href={`/manga/sort?name=${name}`}>
                     排序
                 </Link>
-                {/*<button*/}
-                {/*    className={"rounded-full w-12 y-12 z-20 inset-x-24 inset-y-24 sticky bg-green-200"}*/}
-                {/*    onClick={() => {*/}
-                {/*        console.log(1)*/}
-                {/*        setScroll(true) */}
-                {/*    }}>*/}
-                {/*    滚动*/}
-                {/*</button>*/}
-                {/*{expend && <div className={'w-full h-full max-h-screen'}>*/}
-                {/*    <Suspense fallback={<div>loading</div>}>*/}
-                {/*        <img className={'object-contain h-screen'}*/}
-                {/*             onClick={(e) => {*/}
-                {/*                 if (idx + 1 > imgs.length) {*/}
-                {/*                     setExpend(false)*/}
-                {/*                     return*/}
-                {/*                 }*/}
-                {/*                 setIdx(idx + 1)*/}
-                {/*             }}*/}
-                {/*             onDoubleClick={(e) => setExpend(false)}*/}
-                {/*             src={imgs[start + idx]} alt=""/>*/}
-                {/*    </Suspense>*/}
-                {/*</div>}*/}
                 {!expend && <div
                     // @ts-ignore
                     //ref={ptopRef}

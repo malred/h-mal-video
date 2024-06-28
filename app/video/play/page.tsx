@@ -4,6 +4,8 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {Suspense, useEffect, useRef, useState} from "react";
 import {videoStaticBasePath} from '@/constants/urlOrPath'
 import {getList} from "@/store/vlist";
+import {Badge} from "@/components/ui/badge";
+import Link from "next/link";
 
 // 强制更新
 // export const dynamic = 'force-dynamic'
@@ -64,14 +66,14 @@ export default function VideoPlayPage() {
 
     return (
         <Suspense fallback={<p>loading...</p>}>
-            <div className={'pt-12 flex flex-row'}>
-                <div className={`flex flex-col mt-8 items-center justify-start w-3/4`}>
+            <div className={'bg-pink-50 min-h-screen h-full pt-16 flex flex-row'}>
+                <div className={`gap-3 flex flex-col mt-12 items-center justify-start w-4/5`}>
                     <video
                         muted
                         ref={videoRef}
                         onPlay={(e) => {
                             //@ts-ignore
-                            videoRef.current.muted=false
+                            videoRef.current.muted = false
                             //@ts-ignore
                             videoRef.current.requestFullscreen();
                         }}
@@ -93,25 +95,74 @@ export default function VideoPlayPage() {
                                 nav.push(`/video/play?i=${i + 1}&page=${page}&size=${size}`)
                             } else nav.push('/video')
                         }}
-                        className={`rounded-lg h-5/6`}
+                        className={`rounded-lg h-[30rem] w-[50rem]`}
                         controls
                         autoPlay
                         src={'/' + vref.current}
                     >
-                        {/* <source
-                            src={vref.current}
-                            // src={'/' + intervalRef.current[idx]}
-                            type="video/webm"
-                        />
-                        <source
-                            src={vref.current}
-                            // src={'/' + intervalRef.current[idx]}
-                            type="video/mp4" */}
-                        {/* /> */}
                     </video>
+                    <div className={'justify-center w-3/4 flex flex-row'}>
+                        <span>{vref.current}</span>
+                    </div>
+                    <div className={'flex flex-row gap-2'}>
+                        {['丝袜', '颜射', '过膝袜', '潮吹', '内射'].map((s, i) => (
+                            <Badge key={i} variant={'pink'}>{s}</Badge>
+                        ))}
+                    </div>
+                    <div className={'w-1/3 border-t-2 '}>
+                    </div>
+                    <div className={'w-2/3 my-1'}>
+                        留言
+                    </div>
+                    <div className={'w-2/3 '}>
+                        {[
+                            {
+                                id: 1,
+                                name: 'user1',
+                                avatar: '/logo.png',
+                                comment: '艹④丝袜母狗!😍😍😍😋🤤🤤🤤',
+                                createdAt: '2024-6-27'
+                            },
+                            {
+                                id: 1,
+                                name: 'user1',
+                                avatar: '/logo.png',
+                                comment: '爆舔丝足😝😝😝🥵🥵🥵',
+                                createdAt: '2024-6-27'
+                            }
+                        ].map((item, i) => (
+                            <div className={'mb-2 border-b flex flex-col gap-2 justify-between'}>
+                                <div className={' items-center flex flex-row gap-3'}>
+                                    <img
+                                        className={'h-12 w-12 rounded-full'}
+                                        src={item.avatar} alt=""/>
+                                    <span>{item.name}</span>
+                                    <span>{item.createdAt}</span>
+                                </div>
+                                <div className={'pb-2 px-2'}>
+                                    {item.comment}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 {/*播放列表*/}
-                <div className={'mt-2 w-1/4 flex flex-col'}>列表</div>
+                <div className={'border-l-2 p-4 mt-10 w-88 flex flex-col gap-3'}>
+                    {/*<span className={'text-xl font-bold'}>播放列表</span>*/}
+                    {getList()
+                        .slice(0, parseInt(size))
+                        .map((l, i) => (
+                            <div className={'bg-pink-50 shadow-lg rounded-lg flex flex-row gap-2'} key={i}>
+                                <video
+                                    className={'max-w-44 bg-green-50 h-48 rounded-lg '}
+                                    src={'/' + l}></video>
+                                <Link href={`/video/play?i=${i}&page=${page}&size=${size}`}
+                                      className={'truncate w-36 p-2'}>
+                                    {l}
+                                </Link>
+                            </div>
+                        ))}
+                </div>
             </div>
         </Suspense>
     )

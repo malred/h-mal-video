@@ -29,6 +29,7 @@ export default function SortPage() {
                 }
             })
             ps2.sort((a, b) => {
+                console.log(a,b)
                 let a1 = a.img.split('_')[0].split('/')
                 let b1 = b.img.split('_')[0].split('/')
                 console.log(a1, b1)
