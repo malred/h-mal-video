@@ -1,0 +1,160 @@
+'use client';
+import {useSearchParams} from "next/navigation";
+import {useEffect, useState} from "react";
+import Draggable from 'react-draggable';
+
+// import {DragDropContext, Droppable,Draggable} from 'react-beautiful-dnd';
+// error
+export default function SortPage() {
+    // 目录名
+    let name = useSearchParams().get('name')
+
+    const [imgs, setImgs] = useState([])
+    // 要提交更新顺序的imgs
+    const [newImgs, setNewImgs] = useState([])
+    // 当前拖拽元素位置
+    const [curPosition, setCurPosition] = useState({x: 0, y: 0})
+
+    useEffect(() => {
+        // reset();
+        (async () => {
+            let res = await fetch(`/api/image/${name}`, {method: 'GET'})
+            let photos = await res.json()
+            // console.log(photos.images.slice(start, end));
+            let ps = photos.images.map((p: string) => p.replace('public/', ''))
+            setImgs(ps)
+            setNewImgs(ps)
+        })()
+    }, [])
+    console.log(imgs)
+
+
+    // 浏览图片, 拖拽排序
+    // 重命名接口 -> oldName, newName -> 本页面拖拽时在前面添加1,2,3...序号,然后提交
+    return (
+        <div className={'pt-14 flex flex-row flex-wrap gap-2'}>
+            {/*{imgs.map((img: string, index: number) => (*/}
+            {/*    <div*/}
+            {/*        // 在可拖动的元素或者被选择的文本进入一个有效的放置目标时触发。*/}
+            {/*        // onDragEnter={(e)=>{*/}
+            {/*        //     console.log(e.target)*/}
+            {/*        // }}*/}
+            {/*        // 事件在拖放操作结束时触发（通过释放鼠标按钮或单击 escape 键）*/}
+            {/*        // onDragEnd={(e)=>{*/}
+            {/*        //     console.log(e.target)*/}
+            {/*        // }}*/}
+            {/*        className={'text-center w-44 h-56'}>*/}
+            {/*        {index}*/}
+            {/*    </div>*/}
+            {/*))}*/}
+            <div className={'w-full'}></div>
+            {imgs.map((img: string, index: number) => (
+                    <>
+                        <Draggable
+                            key={index}
+                            onStop={(e) => {
+                                let el = e.target
+                                console.log(el.src)
+                                let elp = el.getBoundingClientRect()
+
+                                // console.log(e.target)
+                                let imgTags =
+                                    window.document.getElementsByTagName('img')
+                                // console.log(imgTags)
+
+                                // 拖拽终点左侧元素
+                                let le
+                                // 拖拽终点右侧元素
+                                let re
+                                for (let i = 2; i < imgTags.length; i++) {
+                                    // console.log(imgTags[i].getBoundingClientRect());
+                                    let position = imgTags[i].getBoundingClientRect()
+                                    if (position.left < elp.left) {
+                                        // console.log('p', position)
+                                        // console.log('e', elp)
+                                        // 要是同一行的最近元素
+                                        // 底边和el的底边差不大于height
+                                        if (elp.height > Math.abs(position.bottom - elp.bottom)) {
+                                            if (le &&
+                                                Math.abs(position.bottom - elp.bottom)
+                                                // < elp.height
+                                                < Math.abs(le.getBoundingClientRect().bottom - elp.bottom)
+                                                // && (position.left - elp.left <
+                                                //     le.getBoundingClientRect().left - elp.left)
+                                            ) {
+                                                le = imgTags[i]
+                                                continue
+                                            }
+                                            le = imgTags[i]
+                                        }
+                                    }
+                                }
+                                for (let i = imgTags.length - 1; i >= 2; i--) {
+                                    // console.log(imgTags[i].getBoundingClientRect());
+                                    let position = imgTags[i].getBoundingClientRect()
+                                    if (position.right > elp.right) {
+                                        // console.log('p', position)
+                                        // console.log('e', elp)
+                                        if (elp.height > Math.abs(position.bottom - elp.bottom)) {
+                                            if (re &&
+                                                Math.abs(position.bottom - elp.bottom)
+                                                // < elp.height
+                                                < Math.abs(re.getBoundingClientRect().bottom - elp.bottom)
+                                                // && (position.right - elp.right <
+                                                //     re.getBoundingClientRect().right - elp.right)
+                                            ) {
+                                                re = imgTags[i]
+                                                continue
+                                            }
+                                            re = imgTags[i]
+                                        }
+                                    }
+                                }
+                                console.log(le, re)
+                                // console.log(window.document.getElementsByClassName('img'));
+                                // 获取当前
+                                // 改变imgs的顺序
+                                // 1, 移除被移动的img
+                                // imgs.filter((img: string, index: number) =>
+                                //     index === el.id
+                                // )
+                                let arr = newImgs
+                                // arr[el.id] = undefined
+                                // 2, 插入左右两个之间
+                                let lid = le?.id
+                                let rid = re?.id
+                                console.log(lid, rid)
+                                if (lid) {
+                                    // 从lid到el.id之间的都要后移, 填补空位
+                                    for (let i = parseInt(el.id); i > parseInt(lid); i--) {
+                                        console.log(arr[i], '>', arr[i - 1])
+                                        arr[i] = arr[i - 1]
+                                    }
+                                    arr[parseInt(lid) + 1] = decodeURI(el.src.replace('http://localhost:3000/', ''))
+                                }
+                                if (rid) {
+                                    // 从el.id到rid之间的都要前移, 填补空位
+                                    for (let i = parseInt(el.id); i < parseInt(rid); i++) {
+                                        console.log(arr[i], '>', arr[i + 1])
+                                        arr[i] = arr[i + 1]
+                                    }
+                                    arr[rid] = decodeURI(el.src.replace('http://localhost:3000/', ''))
+                                }
+                                console.log(arr)
+                                setImgs(arr)
+                            }}
+                            onDrag={(e) => {
+                                // console.log(e)
+                            }}>
+                            <img
+                                id={index}
+                                src={'/' + img} alt=""
+                                className={'img w-44 h-56'}
+                            />
+                        </Draggable>
+                    </>
+                )
+            )}
+        </div>
+    )
+}

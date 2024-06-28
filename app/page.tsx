@@ -1,10 +1,9 @@
 'use client';
-import NavBar from "@/components/NavBar";
 import {useEffect, useState} from "react";
-import {string} from "postcss-selector-parser";
-import {setPList} from "@/store/plist";
 import Link from "next/link";
 import {hoverShadowSetYClassname} from "@/constants/tailwindClass";
+import {usePage} from "@/hooks/usePage";
+import {PageBottom} from "@/components/PageBottom";
 
 export default function Home() {
     // let res = await fetch('http://localhost:3000/api/audio')
@@ -16,6 +15,7 @@ export default function Home() {
     const [names, setNames] = useState([])
     // 封面
     const [covers, setCovers] = useState([])
+
 
     useEffect(() => {
         // reset();
@@ -41,7 +41,9 @@ export default function Home() {
                     return ps1.indexOf(item) === index
                 })
             console.log(ps2)
-            setImgs(ps2)
+            setImgs(
+                ps2
+            )
 
             ps
                 // photos/x/[RPG]零号羔羊CG
@@ -53,7 +55,10 @@ export default function Home() {
                         newArr.push(item)
                     }
                 })
-            setNames(newArr)
+            setNames(
+                // @ts-ignore
+                newArr
+            )
 
             let cs = []
             for (const n of newArr) {
@@ -62,7 +67,10 @@ export default function Home() {
                 let file = await res.json()
                 cs.push(file.f)
             }
-            setCovers(cs)
+            setCovers(
+                // @ts-ignore
+                cs
+            )
         })()
     }, [])
 
@@ -71,18 +79,23 @@ export default function Home() {
             <div className={'2xl:mt-12 mt-16 p-2 min-h-screen min-w-full flex flex-col'}>
                 {/*card*/}
                 <div className={'py-4 px-1 flex flex-wrap flex-row gap-x-20 gap-y-12'}>
-                    {names.map((n: string, index: number) => (
-                        <Link href={`/manga?name=${imgs.filter((p: string) => p.includes(n))[0].replace('/', '')}`}>
-                            <div
-                                className={hoverShadowSetYClassname + 'relative bg-amber-200 h-40 border w-28 rounded-lg flex flex-row justify-center'}
-                            >
-                                <img fetchPriority={'high'} title={n}
-                                     className={'rounded-lg opacity-80 h-40 w-28 '}
-                                     src={covers[index]}
-                                     alt=""/>
-                                <span className={'absolute font-black'}>{n}</span>
-                            </div>
-                        </Link>))}
+                    {names
+                        .map((n: string, index: number) => (
+                            // @ts-ignore
+                            <Link href={`/manga?name=${imgs.filter((p: string) => p.includes(n))[0].replace('/', '')}`}>
+                                <div
+                                    className={hoverShadowSetYClassname + 'relative bg-amber-200 h-40 border w-28 rounded-lg flex flex-row justify-center'}
+                                >
+                                    <img
+                                        loading={"lazy"}
+                                        // fetchPriority={'high'}
+                                        title={n}
+                                        className={'rounded-lg opacity-80 h-40 w-28 '}
+                                        src={covers[index]}
+                                        alt=""/>
+                                    <span className={'absolute font-black'}>{n}</span>
+                                </div>
+                            </Link>))}
                 </div>
                 {/*<span className={'text-xl'}>视频区</span>*/}
                 {/*<span className={'text-xl'}>音频区</span>*/}

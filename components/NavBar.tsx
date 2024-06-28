@@ -8,7 +8,7 @@ export const NavBar = () => {
     const pathname = usePathname();
 
     return (
-        <div className={'fixed border-b bg-white shadow hover:shadow-md w-full grid grid-cols-4 gap-4'}>
+        <div className={'z-20 fixed border-b bg-white shadow hover:shadow-md w-full grid grid-cols-4 gap-4'}>
             <div className={'flex flex-row text-xs md:text-base items-center gap-6'}>
                 <img src={'/logo.png'} alt='' className={'h-12 w-14 mx-2'}></img>
                 <Link href={'/'}>
