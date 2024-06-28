@@ -37,6 +37,7 @@ next-env.d.ts
 
 /public/**/*.*
 /public/
+/public
 /学习资料/node_modules/.bin/mime
 /学习资料/node_modules/.bin/mime.cmd
 /学习资料/node_modules/.bin/mime.ps1

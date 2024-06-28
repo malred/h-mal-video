@@ -16,8 +16,40 @@ datasource db {
 }
 
 model Manga {
-  id    Int    @id @default(autoincrement())
-  name  String
+  id          String     @id @default(uuid())
+  name        String
   // url
-  cover String
+  cover       String
+  imgs        Img[] // Manga - Img 一对多
+  MangaList   MangaList? @relation(fields: [mangaListId], references: [id])
+  mangaListId Int?
+  // "xm,xx,x"
+  tag         String
+  author      String?
+  createdBy   DateTime   @default(now())
+}
+
+model Img {
+  id      String  @id @default(uuid())
+  url     String
+  alt     String?
+  Manga   Manga?  @relation(fields: [mangaId], references: [id])
+  mangaId String?
+}
+
+// 漫画和图片的映射关系
+// model MangaMap {
+//   id      Int    @id @default(autoincrement())
+//   manga   Manga  @relation(fields: [mangaId], references: [id])
+//   mangaId String
+//   img     Img    @relation(fields: [imgId], references: [id])
+//   imgId   String
+// }
+
+// 漫画合集
+model MangaList {
+  id        Int      @id @default(autoincrement())
+  manga     Manga[] // MangaList - Manga 一对多
+  name      String // 合集名称
+  createdBy DateTime @default(now())
 }
