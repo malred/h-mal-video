@@ -19,7 +19,7 @@ export const NavBar = () => {
                 <Link href={'/photo'}>
                     <span
                         className={`${pathname === '/photo' ? 'bg-green-200' : ''} ${hoverShadowSetYClassname} 
-                        hover:bg-green-300 xl:p-2 p-1 inline-block rounded`}>图片</span>
+                        hover:bg-green-300 xl:p-2 p-1 inline-block rounded`}>漫画</span>
                 </Link>
                 <Link href={'/video'}>
                     <span className={`${pathname === '/video' ? 'bg-green-200' : ''} ${hoverShadowSetYClassname} 

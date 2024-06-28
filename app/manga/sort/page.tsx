@@ -1,11 +1,12 @@
 'use client';
-import {useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import Draggable from 'react-draggable';
 
 // import {DragDropContext, Droppable,Draggable} from 'react-beautiful-dnd';
 // error
 export default function SortPage() {
+    const nav = useRouter()
     // 目录名
     let name = useSearchParams().get('name')
 
@@ -27,7 +28,7 @@ export default function SortPage() {
                     id: i
                 }
             })
-           ps2.sort((a, b) => {
+            ps2.sort((a, b) => {
                 let a1 = a.img.split('_')[0].split('/')
                 let b1 = b.img.split('_')[0].split('/')
                 console.log(a1, b1)
@@ -126,14 +127,15 @@ export default function SortPage() {
             )}
             <div className={'w-full p-2 flex flex-row justify-center items-center'}>
                 <button
-                    onClick={() => {
-                        fetch(`/api/image/sort/public/photos/${name}`, {
+                    onClick={async () => {
+                        await fetch(`/api/image/sort/public/photos/${name}`, {
                             method: 'POST',
                             headers: {
                                 "Content-type": "application/json"
                             },
                             body: JSON.stringify(newImgs)
                         })
+                        nav.back()
                     }}
                     className={'py-2 bg-pink-200 rounded-lg px-3'}>提交
                 </button>

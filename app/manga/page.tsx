@@ -4,6 +4,7 @@ import {Suspense, useEffect, useState} from "react";
 import {PageBottom} from "@/components/PageBottom";
 import {usePage} from "@/hooks/usePage";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function MangaPage() {
     // 目录名
@@ -36,13 +37,14 @@ export default function MangaPage() {
             let photos = await res.json()
             // console.log(photos.images.slice(start, end));
             let ps = photos.images.map((p: string) => p.replace('public/', ''))
-            ps.sort((a, b) => {
+            ps.sort((a: string, b: string) => {
                 let a1 = a.split('_')[0].split('/')
                 let b1 = b.split('_')[0].split('/')
                 console.log(a1, b1)
                 console.log(a1.length, b1.length)
                 // 默认比较字符串, 这里用 减号 进行数值比较
                 return (
+                    // @ts-ignore
                     (a1[a1.length - 1]) - (b1[b1.length - 1])
                 )
             })
@@ -135,14 +137,16 @@ export default function MangaPage() {
                         {imgs
                             // .slice(start, end)
                             .map((img, index) => (
-                                <img
+                                <Image
+                                    width={800}
+                                    height={900}
                                     fetchPriority={'high'}
                                     onClick={(e) => {
                                         setExpend(true)
                                         setIdx(index)
                                     }}
                                     className={'shadow-lg object-contain rounded max-h-screen w-3/4'}
-                                    src={(img)} alt=""/>
+                                    src={'/' + img} alt=""/>
                             ))}
                     </div>
                     {/*<PageBottom onPageAdd={onPageAdd} onPageSub={onPageSub} getPage={getPage}/>*/}

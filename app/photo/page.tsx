@@ -3,103 +3,112 @@
 import {Suspense, useEffect, useRef, useState} from "react";
 import {usePage} from "@/hooks/usePage";
 import {PageBottom} from "@/components/PageBottom";
+import Link from "next/link";
+import {hoverShadowSetYClassname} from "@/constants/tailwindClass";
 
 export default function PhotoPage() {
+    // let res = await fetch('http://localhost:3000/api/audio')
+    // let data = await res.json()
+    // console.log(data)
+
     const [imgs, setImgs] = useState([])
-    const {
-        start, end, reset, onPageSub, onPageAdd, getPage, setPage
-    } = usePage(10, imgs.length)
-    // 当前要点击放大的图
-    const [idx, setIdx] = useState(0)
-    // 是否放大图 (铺满页面)
-    const [expend, setExpend] = useState(false)
-    // 当前滚动距离
-    // const [curH, setCurH] = useState(150)
-    const [curH, setCurH] = useState(0)
+    // 最后一级目录, 作为漫画名
+    const [names, setNames] = useState([])
+    // 封面
+    const [covers, setCovers] = useState([])
+
 
     useEffect(() => {
-        reset();
+        // reset();
         (async () => {
             let res = await fetch(`api/image`, {method: 'GET'})
             let photos = await res.json()
-            console.log(photos.images.slice(start, end));
-            let ps = photos.images.map((p: string) => p.replace('public/', ''))
-            setImgs(ps)
+            // console.log(photos.images.slice(start, end));
+            // console.log(photos.images)
+
+            let ps = photos.images
+                // photos/[RPG]零号羔羊CG/x.jpg
+                .map((p: string) => p.replace('public/', ''))
+            // setImgs(ps)
+
+            let newArr: string[] = []
+            let ps1 = ps
+                // photos/[RPG]零号羔羊CG
+                .map((p: string) => p.replace('photos', ''))
+                .map((p: string) => p.slice(0, p.lastIndexOf('/')))
+            let ps2 = ps1
+                // 去重
+                .filter((item: string, index: number) => {
+                    return ps1.indexOf(item) === index
+                })
+            console.log(ps2)
+            setImgs(
+                ps2
+            )
+
+            ps
+                // photos/x/[RPG]零号羔羊CG
+                .map((p: string) => p.slice(0, p.lastIndexOf('/')))
+                // /[RPG]零号羔羊CG
+                .map((p: string) => p.slice(p.lastIndexOf('/') + 1, p.length))
+                .forEach((item: string) => {
+                    if (newArr.indexOf(item) === -1) {
+                        newArr.push(item)
+                    }
+                })
+            setNames(
+                // @ts-ignore
+                newArr
+            )
+
+            let cs = []
+            for (const n of newArr) {
+                let path = ps2.filter((p: string) => p.includes(n))[0].replace('/', '')
+                let res = await fetch(`api/image/cover/public/photos/${path}`)
+                let file = await res.json()
+                cs.push(file.f)
+            }
+            setCovers(
+                // @ts-ignore
+                cs
+            )
         })()
     }, [])
-    // 变动时滚动
-    useEffect(() => {
-        console.log(curH)
-        if (curH > (window.outerHeight * 10)) {
-            console.log('stop')
-            setTimeout(() => {
-                setCurH(0)
-            })
-            // 移动端有bug, 建议手动
-            // window.scrollTo(0, 0)
-            // onPageAdd()
-            return () => {
-                onPageAdd()
-            }
-        } else {
-            console.log('scroll')
-            // 0.5s后更改h, 触发effect, effect先执行滚动, 然后又设置延时set, 循环触发
-            let id = setTimeout(() => {
-                setCurH(curH + 400)
-            }, 500);
-            // 下一次进入时触发滚动
-            return () => {
-                clearTimeout(id)
-                window.scrollTo(0, curH)
-            }
-        }
-        // if (curH > window.outerHeight) {
-        //     console.log(222)
-        //     window.scrollTo(0, 0)
-        //     setCurH(0)
-        //     onPageAdd()
-        // }
-    }, [curH]);
 
     return (
         <>
-            {expend && <div className={'w-full h-full max-h-screen'}>
-                <Suspense fallback={<div>loading</div>}>
-                    <img className={'object-contain h-screen'}
-                         onClick={(e) => {
-                             if (idx + 1 > imgs.length) {
-                                 setExpend(false)
-                                 return
-                             }
-                             setIdx(idx + 1)
-                         }}
-                         onDoubleClick={(e) => setExpend(false)}
-                         src={imgs[start + idx]} alt=""/>
-                </Suspense>
-            </div>}
-            {!expend && <div
-                // @ts-ignore
-                //ref={ptopRef}
-                className={'flex flex-col gap-2 md:pt-12 pt-12 bg-gray-100 min-h-screen'}>
-                {/* 纯色背景 加 搜索词或页面标题 */}
-                {/*<div className={'text-center md:p-20 p-14 bg-amber-200'}>*/}
-                {/*    <span className={' text-2xl '}>图片</span>*/}
-                {/*</div>*/}
-                <div className={'mt-2 flex flex-col gap-4 items-center'}>
-                    {imgs
-                        .slice(start, end)
-                        .map((img, index) => (
-                            <img
-                                fetchPriority={'high'}
-                                onClick={(e) => {
-                                    setExpend(true)
-                                    setIdx(index)
-                                }}
-                                className={'shadow-lg object-contain rounded max-h-screen w-3/4'}
-                                src={(img)} alt=""/>
-                        ))}
+            <div className="flex flex-col items-center justify-between ">
+                <div className={'2xl:mt-12 mt-16 p-2 min-h-screen min-w-full flex flex-col'}>
+                    {/*card*/}
+                    <div className={'py-4 px-1 flex flex-wrap flex-row gap-x-8 gap-y-16'}>
+                        {names
+                            .map((n: string, index: number) => (
+                                // @ts-ignore
+                                <Link href={`/manga?name=${imgs.filter((p: string) => p.includes(n))[0].replace('/', '')}`}>
+                                    <div
+                                        className={hoverShadowSetYClassname +
+                                            'relative h-40 border w-28 rounded-lg flex flex-row justify-center'}
+                                    >
+                                        <img
+                                            // width={28}
+                                            // height={40}
+                                            // loading={"lazy"}
+                                            // fetchPriority={'high'}
+                                            title={n}
+                                            className={'rounded-lg opacity-80 h-40 w-28 '}
+                                            src={'/' + covers[index]}
+                                            alt=""/>
+                                        <span className={'absolute w-28 truncate font-black'}>{n}</span>
+                                    </div>
+                                </Link>))}
+                    </div>
+                    {/*<span className={'text-xl'}>视频区</span>*/}
+                    {/*<span className={'text-xl'}>音频区</span>*/}
+                    {/*<span className={'text-xl'}>图片区</span>*/}
                 </div>
-                <PageBottom onPageAdd={onPageAdd} onPageSub={onPageSub} getPage={getPage}/>
-            </div>}
+                {/*            <div className={'bg-green-300 min-h-screen h-96 min-w-full'}>*/}
+                {/*d*/}
+                {/*            </div>*/}
+            </div>
         </>)
 }
