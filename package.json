@@ -10,7 +10,9 @@
     "s": "next build && next start"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.4.1",
     "@chinese-fonts/mkwtyt": "^1.4.0",
+    "@prisma/client": "^5.16.1",
     "@radix-ui/react-hover-card": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
@@ -31,6 +33,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
+    "prisma": "^5.16.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

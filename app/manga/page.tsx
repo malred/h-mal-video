@@ -32,7 +32,7 @@ export default function MangaPage() {
     useEffect(() => {
         // reset();
         (async () => {
-            let res = await fetch(`api/image/${name}`, {method: 'GET'})
+            let res = await fetch(`api/image/${name}`, {method: 'GET', cache: 'force-cache'})
             console.log(res)
             let photos = await res.json()
             // console.log(photos.images.slice(start, end));
