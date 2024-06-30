@@ -1,5 +1,4 @@
 import {PrismaClient} from "@prisma/client";
-import {getChildDir} from "../api/file.js";
 
 const db = new PrismaClient({
     log: [{emit: 'stdout', level: 'query'}]
@@ -8,7 +7,12 @@ const db = new PrismaClient({
 
 const path = 'public/photos'
 
-let {dir} = await getChildDir('public/photos')
+let res = await fetch(
+    'http://localhost:3000/api/file/dir/child?path=' + path,
+    // {method: 'GET', cache: 'no-cache'}
+    {method: 'GET'}
+)
+let {dir} = await res.json()
 dir = dir.map((d) => d.replace('public', ''))
 console.log(dir)
 console.log(dir.length)
