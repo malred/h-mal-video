@@ -13,25 +13,42 @@ const minutes = ('0' + now.getMinutes()).slice(-2);
 const seconds = ('0' + now.getSeconds()).slice(-2);
 
 export async function GET(req: NextRequest) {
-    let dir = await readdirChildLevel('public/game-store/')
-    return NextResponse.json({last: dir[dir.length - 1]})
+    const game = req.nextUrl.searchParams.get('game');
+    try {
+        let dir = await readdirChildLevel(`public/game-store/${game ? game : ''}`)
+        return NextResponse.json({last: dir[dir.length - 1]})
+    } catch (e) {
+        return NextResponse.json({msg: 'error'})
+    }
 }
 
 export async function POST(req: NextRequest) {
+    // 当前要保存的游戏
+    const game = req.nextUrl.searchParams.get('game');
+    let add = ''
+    if (game) {
+        add = game
+    }
+
     let send = await req.json()
 
     const formattedTime = year + '-' + month + '-' + day + '-' + hours + '-' + minutes;
-    console.log(formattedTime)
 
+    let base = 'public/game-store/';
     try {
-        await mkdir('public/game-store/' + formattedTime)
+        await mkdir(base + add)
+    } catch (e) {
+        console.log(e)
+    }
+    try {
+        await mkdir(base + add + '/' + formattedTime)
     } catch (e) {
         console.log(e)
     }
     for (let i = 0; i < send.length; i++) {
         console.log(send[i].key)
         await writeFile(
-            'public/game-store/' + formattedTime + '/' + send[i].key + '.txt',
+            base + add + '/' + formattedTime + '/' + send[i].key + '.txt',
             send[i].val,
         )
     }
