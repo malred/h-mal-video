@@ -26,6 +26,7 @@ model Manga {
   // "xm,xx,x"
   tag         String
   author      String?
+  size        Int // 有多少页
   createdBy   DateTime   @default(now())
 }
 

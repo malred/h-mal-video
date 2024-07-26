@@ -8,5 +8,6 @@ export async function GET(req: NextRequest) {
     console.log('public/photos' + path)
     let dir = await readdirFilter('public/photos' + path, 'jpg')
     let dir1 = await readdirFilter('public/photos' + path, 'png')
-    return NextResponse.json({images: [...dir,...dir1]})
+    let dir2 = await readdirFilter('public/photos' + path, 'webp')
+    return NextResponse.json({images: [...dir, ...dir1, ...dir2]})
 }

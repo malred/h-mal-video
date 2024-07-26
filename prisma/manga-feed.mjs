@@ -26,11 +26,20 @@ for (let i = 0; i < dir.length; i++) {
     let file = await cover_res.json()
     // console.log(file)
 
+    // 获取页数
+    let p_res = await fetch(
+        'http://localhost:3000/api/file/dir/child/size?path=public/photos/' + dir[i],
+        // {method: 'GET', cache: 'no-cache'}
+        {method: 'GET'}
+    )
+    let {size} = await p_res.json()
+
     // 创建manga
     let manga = await db.manga.create({
         data: {
             name: dir[i],
             cover: file.f,
+            size,
             tag: "丝袜,颜射,长筒袜,黑丝,白丝,裤袜,潮吹,纯爱"
         }
     })

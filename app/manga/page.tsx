@@ -5,6 +5,9 @@ import {PageBottom} from "@/components/PageBottom";
 import {usePage} from "@/hooks/usePage";
 import Link from "next/link";
 import Image from "next/image";
+import {Slider} from "@radix-ui/themes";
+// import { Slider } from "@/components/ui/slider"
+
 
 export default function MangaPage() {
     // 目录名
@@ -107,10 +110,11 @@ export default function MangaPage() {
                     setCurH(0)
                 }}>
                 <Link
-                    className={"rounded-full p-2 w-12 y-12 z-20 inset-x-24 inset-y-24 sticky bg-green-200"}
+                    className={"rounded-lg p-2 w-12 y-12 z-20 inset-x-24 inset-y-24 sticky bg-green-200"}
                     href={`/manga/sort?name=${name}`}>
                     排序
                 </Link>
+                {/*<Slider defaultValue={[33]} max={100} step={1} />*/}
                 {!expend && <div
                     // @ts-ignore
                     //ref={ptopRef}

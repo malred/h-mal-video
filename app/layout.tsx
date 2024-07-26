@@ -1,6 +1,8 @@
 import type {Metadata} from "next";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import '@radix-ui/themes/styles.css';
+import { Theme } from '@radix-ui/themes';
 
 // import "@chinese-fonts/mkwtyt/dist/MaoKenTangYuan/results.css";
 
@@ -17,8 +19,10 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body>
-        <NavBar/>
-        {children}
+        <Theme>
+            <NavBar/>
+            {children}
+        </Theme>
         </body>
         </html>
     );

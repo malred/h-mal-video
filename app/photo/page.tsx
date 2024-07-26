@@ -34,6 +34,10 @@ export default function PhotoPage() {
     // db: manga
     const [mangas, setMangas] = useState([])
 
+    const {
+        start, end, reset, onPageSub, onPageAdd, getPage
+    } = usePage(40, mangas.length)
+
     useEffect(() => {
         (async () => {
             let res = await fetch(`api/manga`, {
@@ -55,6 +59,7 @@ export default function PhotoPage() {
                         {/*{names*/}
                         {/*    .map((n: string, index: number) => (*/}
                         {mangas
+                            .slice(start, end)
                             .map((m: manga, index: number) => (
                                 // @ts-ignore
                                 <Link
@@ -94,6 +99,7 @@ export default function PhotoPage() {
                                 </Link>))}
                     </div>
                 </div>
+                <PageBottom onPageSub={onPageSub} onPageAdd={onPageAdd} getPage={getPage}/>
             </div>
         </>)
 }

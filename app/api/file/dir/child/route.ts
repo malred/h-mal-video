@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
     if (!path) return NextResponse.error()
     let child
     try {
+        // 读取子集文件夹下的文件名
         child = await readdirChildLevel(path);
         console.log(child)
         if (!child)
