@@ -4,6 +4,8 @@ import NavBar from "@/components/NavBar";
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
 
+import { ThemeProvider } from 'next-themes'
+
 // import "@chinese-fonts/mkwtyt/dist/MaoKenTangYuan/results.css";
 
 export const metadata: Metadata = {
@@ -20,8 +22,10 @@ export default function RootLayout({
         <html lang="en">
         <body>
         <Theme>
-            <NavBar/>
-            {children}
+            <ThemeProvider>
+                <NavBar/>
+                {children}
+            </ThemeProvider>
         </Theme>
         </body>
         </html>

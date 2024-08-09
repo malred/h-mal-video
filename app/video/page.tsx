@@ -1,14 +1,29 @@
 'use client';
 // import {readdirChildLevel, readdirFilter} from "@/lib/file";
 
-import { getChildDir } from "@/api/file";
-import { useEffect, useState } from "react";
-import { hoverShadowSetYClassname } from "@/constants/tailwindClass";
-import { getCurVideo } from "@/api/video";
-import { useRouter } from "next/navigation";
-import { usePage } from "@/hooks/usePage";
-import { PageBottom } from "@/components/PageBottom";
-import { setList } from '@/store/vlist'
+import {getChildDir} from "@/api/file";
+import {useEffect, useState} from "react";
+import {hoverShadowSetYClassname} from "@/constants/tailwindClass";
+import {getCurVideo} from "@/api/video";
+import {useRouter} from "next/navigation";
+import {usePage} from "@/hooks/usePage";
+import {PageBottom} from "@/components/PageBottom";
+import {setList} from '@/store/vlist'
+import {useRef} from 'react'
+// import { gsap } from 'gsap/dist/gsap';
+// import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+// import { useGSAP } from '@gsap/react';
+// GSAP のインポート
+import Gsap from 'gsap';
+
+// ScrollTrigger のインポート
+import {ScrollTrigger} from 'gsap/dist/ScrollTrigger';
+
+// ScrollTriggerの初期化
+Gsap.registerPlugin(ScrollTrigger);
+Gsap.config({
+    nullTargetWarn: false,
+});
 
 export default function VideoPage() {
     const nav = useRouter()
@@ -31,6 +46,40 @@ export default function VideoPage() {
         start, end, reset, onPageSub, onPageAdd, getPage
     } = usePage(10, curVideo.length)
 
+    const titleRef = useRef(null)
+    const boardRef = useRef(null)
+
+    useEffect(() => {
+
+        // フェードイン表示する
+        Gsap.from(titleRef.current?.parentElement, {
+            opacity: 0,
+            duration: 1,
+            yPercent: -100,
+            // width: 0,
+            transformOrigin: 'center'
+            // skewX: 30,
+        });
+        Gsap.to(titleRef.current?.parentElement, {
+            opacity: 1,
+            duration: 1,
+            yPercent: 0,
+            // width: '100%',
+            // skewX: 0,
+        });
+        Gsap.from(boardRef.current, {
+            opacity: 0,
+            duration: 1,
+            yPercent: 100,
+        });
+        Gsap.to(boardRef.current, {
+            opacity: 1,
+            duration: 1,
+            yPercent: 0,
+        });
+
+
+    }, []);
 
     useEffect(() => {
         // 每次index和idx改变应该清空start end
@@ -78,15 +127,17 @@ export default function VideoPage() {
                 console.log(curV)
             }
         })()
+
     }, [idx, deepIdx])
 
     return (<div className={'flex flex-col gap-2 md:pt-16 pt-12 bg-gray-100 min-h-screen'}>
         {/* 纯色背景 加 搜索词或页面标题 */}
         <div className={'text-center md:p-20 p-14 bg-amber-200'}>
-            <span className={' text-2xl '}>视频</span>
+            <span className={' text-2xl font-bold'} ref={titleRef}>视频</span>
         </div>
         {/*白色 标签版*/}
         <div
+            ref={boardRef}
             className={'pt-4 pl-4 -inset-y-12 w-3/4 md:inset-x-44 overflow-auto inset-x-24 md:ml-2 rounded h-52 relative bg-white'}>
             <div className={'border-b flex flex-row justify-start p-2 gap-4'}>
                 {dir
@@ -165,6 +216,6 @@ export default function VideoPage() {
         {/*        setEnd(end + 10)*/}
         {/*    }}>&gt;</span>*/}
         {/*</div>*/}
-        <PageBottom onPageSub={onPageSub} onPageAdd={onPageAdd} getPage={getPage} />
+        <PageBottom onPageSub={onPageSub} onPageAdd={onPageAdd} getPage={getPage}/>
     </div>)
 }
